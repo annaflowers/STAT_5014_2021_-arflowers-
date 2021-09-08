@@ -5,26 +5,81 @@ date: "9/8/2021"
 output: pdf_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+# Homework 2
+
+## Problem 2
+
+### Part A
+
+### Part B
+
+## Problem 3
+
+## Problem 4
+
+``` {r}
+#install.packages('data.table')
+library(data.table)
+covid_raw <- fread("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv")
+us <- covid_raw[covid_raw$countriesAndTerritories == 'United_States_of_America',]
+us_filtered <- us[us$month %in% c(6:7),]
+us_filtered$index <- rev(1:dim(us_filtered)[1]) 
+fit<-lm(`Cumulative_number_for_14_days_of_COVID-19_cases_per_100000`~index, data=us_filtered)
 ```
 
-## R Markdown
+### Part A
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+#### 1
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+library(knitr)
+kable(summary(us_filtered))
 ```
 
-## Including Plots
+#### 2
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+library(stargazer)
+stargazer(fit)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & `Cumulative\_number\_for\_14\_days\_of\_COVID-19\_cases\_per\_100000` \\ 
+\hline \\[-1.8ex] 
+ index & 4.107$^{***}$ \\ 
+  & (0.145) \\ 
+  & \\ 
+ Constant & 42.853$^{***}$ \\ 
+  & (5.165) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 61 \\ 
+R$^{2}$ & 0.932 \\ 
+Adjusted R$^{2}$ & 0.930 \\ 
+Residual Std. Error & 19.922 (df = 59) \\ 
+F Statistic & 803.464$^{***}$ (df = 1; 59) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table}
+
+### Part B
+
+```{r}
+#install.packages("broom")
+fit.diags <- broom::augment(fit)
+```
+
+### Part C
+
+## Problem 5
+
+## Problem 6
