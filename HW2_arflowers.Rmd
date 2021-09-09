@@ -12,6 +12,12 @@ output: pdf_document
 ### Part A
 
 ### Part B
+Gamma Density Function: $\\$
+$f(x | \alpha,\beta) = \frac{1}{\Gamma (\alpha) \beta^\alpha} x^{\alpha-1} e^{-x/\beta}, 0\leq x < \infty, \alpha,\beta > 0 \\$
+Chi squared Density Function: $\\$
+$f(x|p) = \frac{1}{\Gamma(p/2)2^{p/2}}x^{(p-2)-1}e^{-x/2}; 0 \leq x < \infty; p = 1,2,... \\$
+Lognormal Density Function: $\\$
+$f(x|\mu,\sigma^2) = \frac{1}{\sqrt{2\pi}\sigma} \frac{e^{-(\log x-\mu)^2/(2\sigma^2)}}{x}, o \leq x < \infty, -\infty < \mu < \infty \\$
 
 ## Problem 3
 
@@ -40,7 +46,7 @@ kable(summary(us_filtered))
 
 ```{r}
 library(stargazer)
-stargazer(fit)
+#stargazer(fit)
 ```
 
 \begin{table}[!htbp] \centering 
