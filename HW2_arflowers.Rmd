@@ -11,6 +11,14 @@ output: pdf_document
 
 ### Part A
 
+I am excited for this class because although I have been working with R for about 3 years now, I have never taken a class specifically designed to teach it. The knowledge I have of R has come from classes that used it to accompany the material (so any teaching revolved around that class), or from internet sources that I used to teach myself. I am especially excited to learn more about LaTeX, because although I have used it in the past I have relied on the support of others to create a coherent document. I also want to experience more of the combination of R and LaTeX, because in the past I have really only used LaTeX through Overleaf in documents entirely in LaTeX. I also want to learn more about Github, because although I have used it in the past I have exclusively relied on repositories used by other people and am not used to creating my own material yet.
+
+\begin{enumerate}
+\item Learn more efficient ways to accomplish tasks I may have been over complicating.
+\item Become more confident in my skills using LaTeX.
+\item Become more comfortable using Github with repositories that I have created myself.
+\end{enumerate}
+
 ### Part B
 Gamma Density Function:
 
@@ -31,6 +39,49 @@ f\left(x|\mu,\sigma^2\right)=\frac{1}{\sqrt{2\pi}\sigma}\frac{e^{-\left(\log x-\
 \end{align}
 
 ## Problem 3
+
+\begin{enumerate}
+\item Keep track of how all results were produced
+\begin{itemize}
+\item Challenges: These results are often produced through a lot of trial and error (especially when coding is involved), so it can be difficult to separate the steps that were important and those that were unnecessary.
+\end{itemize}
+\item Avoid manually manipulating data
+\begin{itemize}
+\item Challenges: Some machines may not be able to read specific data types, but opening the file with a different type may change the data without your knowledge.
+\end{itemize}
+\item Archive (or keep track of) the exact versions of all programs used
+\begin{itemize}
+\item Challenges: Even if you do archive the program, some updates will automatically delete older versions on the computer, possibly rendering past research useless.
+\end{itemize}
+\item Version control all scripts
+\begin{itemize}
+\item Challenges: It can be difficult to know when to store versions of code and when not to. Too many versions of code can still make the correct version difficult to find, and too few means you are less likely to have the exact code that you want. 
+\end{itemize}
+\item Record all intermediate results and standardize if possible
+\begin{itemize}
+\item Challenges:
+\end{itemize}
+\item Note seeds used for analyses that include randomness
+\begin{itemize}
+\item Challenges: 
+\end{itemize}
+\item Store raw data used to make plots
+\begin{itemize}
+\item Challenges:
+\end{itemize}
+\item Keep and inspect all layers of detail of the data
+\begin{itemize}
+\item Challenges:
+\end{itemize}
+\item Connect statements to the results that inspired them
+\begin{itemize}
+\item Challenges:
+\end{itemize}
+\item Provide public access to all data used, programs written, and results discovered
+\begin{itemize}
+\item Challenges:
+\end{itemize}
+\end{enumerate}
 
 ## Problem 4
 
@@ -91,10 +142,7 @@ F Statistic & 803.464$^{***}$ (df = 1; 59) \\
 ```{r}
 #install.packages("broom")
 fit.diags <- broom::augment(fit)
-plot(fit,1)
-plot(fit,2)
-plot(fit,3)
-plot(fit,5)
+plot(fit,c(1:3,5))
 ```
 
 ### Part C
@@ -105,4 +153,7 @@ acf(fit$residuals)
 
 ## Problem 5
 
-## Problem 6
+```{r}
+par(mfrow=c(2,2))
+plot(fit, c(1:3,5))
+```
