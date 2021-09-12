@@ -12,12 +12,23 @@ output: pdf_document
 ### Part A
 
 ### Part B
-Gamma Density Function: $\\$
-$f(x | \alpha,\beta) = \frac{1}{\Gamma (\alpha) \beta^\alpha} x^{\alpha-1} e^{-x/\beta}, 0\leq x < \infty, \alpha,\beta > 0 \\$
-Chi squared Density Function: $\\$
-$f(x|p) = \frac{1}{\Gamma(p/2)2^{p/2}}x^{(p-2)-1}e^{-x/2}; 0 \leq x < \infty; p = 1,2,... \\$
-Lognormal Density Function: $\\$
-$f(x|\mu,\sigma^2) = \frac{1}{\sqrt{2\pi}\sigma} \frac{e^{-(\log x-\mu)^2/(2\sigma^2)}}{x}, o \leq x < \infty, -\infty < \mu < \infty \\$
+Gamma Density Function:
+
+\begin{align}
+f \left(x| \alpha,\beta \right)= \frac{1}{ \Gamma \left( \alpha \right) \beta^ \alpha}x^{ \alpha-1}e^{-x/ \beta}; 0 \leq x< \infty; \alpha,\beta > 0
+\end{align}
+
+Chi squared Density Function:
+
+\begin{align}
+f \left(x|p \right)= \frac{1}{ \Gamma \left(p/2\right) 2^{p/2}}x^{\left(p/2\right)-1}e^{-x/2}; 0\leq x<\infty ;p=1,2,... 
+\end{align}
+
+Lognormal Density Function:
+
+\begin{align}
+f\left(x|\mu,\sigma^2\right)=\frac{1}{\sqrt{2\pi}\sigma}\frac{e^{-\left(\log x-\mu\right)^2/\left(2\sigma^2\right)}}{x}; 0\leq x<\infty; -\infty<\mu<\infty
+\end{align}
 
 ## Problem 3
 
@@ -35,14 +46,12 @@ fit<-lm(`Cumulative_number_for_14_days_of_COVID-19_cases_per_100000`~index, data
 
 ### Part A
 
-#### 1
-
 ```{r}
 library(knitr)
 kable(summary(us_filtered))
 ```
 
-#### 2
+This data is limited to 61 time points from June 2020 to July 2020. There are no missing points, since there are 30 days in June and 31 in July, so that gives a total of 61 days to survey.
 
 ```{r}
 library(stargazer)
@@ -82,9 +91,17 @@ F Statistic & 803.464$^{***}$ (df = 1; 59) \\
 ```{r}
 #install.packages("broom")
 fit.diags <- broom::augment(fit)
+plot(fit,1)
+plot(fit,2)
+plot(fit,3)
+plot(fit,5)
 ```
 
 ### Part C
+
+```{r}
+acf(fit$residuals)
+```
 
 ## Problem 5
 
