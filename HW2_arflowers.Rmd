@@ -59,27 +59,27 @@ f\left(x|\mu,\sigma^2\right)=\frac{1}{\sqrt{2\pi}\sigma}\frac{e^{-\left(\log x-\
 \end{itemize}
 \item Record all intermediate results and standardize if possible
 \begin{itemize}
-\item Challenges:
+\item Challenges: Intermediate steps might not be in a data form that is easy to save, so it might not be possible to keep track of all intermediate steps.
 \end{itemize}
 \item Note seeds used for analyses that include randomness
 \begin{itemize}
-\item Challenges: 
+\item Challenges: Using seeds for randomness may not be appropriate in the context of the experiment.
 \end{itemize}
 \item Store raw data used to make plots
 \begin{itemize}
-\item Challenges:
+\item Challenges: Large data sets may require more storage space than what is available.
 \end{itemize}
 \item Keep and inspect all layers of detail of the data
 \begin{itemize}
-\item Challenges:
+\item Challenges: Amount of data to inspect can grow quickly if there are a lot of layers of data.
 \end{itemize}
 \item Connect statements to the results that inspired them
 \begin{itemize}
-\item Challenges:
+\item Challenges: Research in a specialized field can be difficult to explain to the general public.
 \end{itemize}
 \item Provide public access to all data used, programs written, and results discovered
 \begin{itemize}
-\item Challenges:
+\item Challenges: Some data is not publicly available and perhaps must be purchased, so it cannot be included with the paper.
 \end{itemize}
 \end{enumerate}
 
