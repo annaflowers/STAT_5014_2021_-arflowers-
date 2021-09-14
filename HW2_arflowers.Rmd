@@ -97,12 +97,16 @@ fit<-lm(`Cumulative_number_for_14_days_of_COVID-19_cases_per_100000`~index, data
 
 ### Part A
 
+#### Part 1
+
 ```{r}
 library(knitr)
 kable(summary(us_filtered))
 ```
 
 This data is limited to 61 time points from June 2020 to July 2020. There are no missing points, since there are 30 days in June and 31 in July, so that gives a total of 61 days to survey.
+
+#### Part 2
 
 ```{r}
 library(stargazer)
