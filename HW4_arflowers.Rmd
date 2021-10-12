@@ -1,0 +1,20 @@
+---
+title: "HW4_arflowers"
+author: "Anna Flowers"
+date: "10/12/2021"
+output: pdf_document
+---
+
+# Homework 4
+
+## Problem 3
+
+### Part A
+
+### Part B
+
+### Part C
+
+### Part D
+
+### Part E
