@@ -11,10 +11,33 @@ output: pdf_document
 
 ### Part A
 
+```{r}
+library(tidyverse)
+setwd("~/Desktop/VT/StatProgPackages")
+ThicknessGauge <- read.csv('ThicknessGauge.dat', sep = " ", header = FALSE)
+```
+
 ### Part B
+
+```{r}
+BrainAndBodyWeight <- read.csv('BrainandBodyWeight.dat', sep = " ")
+
+```
 
 ### Part C
 
+```{r}
+LongJump <- read.csv('LongJumpData.dat')
+```
+
 ### Part D
 
+```{r}
+tomato <- read.csv('tomato.dat', header = FALSE)
+```
+
 ### Part E
+
+```{r}
+LarvaeControl <- read.csv('LarvaeControl.dat')
+```
