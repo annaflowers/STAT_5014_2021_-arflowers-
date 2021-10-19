@@ -7,72 +7,190 @@ output: pdf_document
 
 # Homework 4
 
+```{r, include = FALSE}
+library(tidyverse)
+library(tibble)
+library(knitr)
+library(data.table)
+```
+
 ## Problem 3
 
 ### Part A
 
+For this data set, the main issue is that each operator's observations are taking up two columns, when we would prefer a single column for each operator's observations. I am going to assume that the observations are given with each operator's two observations next to each other, but it is not entirely clear if that is how the data is stored, or if it goes through each operator's first observation and then each operator's second observation. My goal is to build a table with 4 column's for the part, operator 1's observations, operator 2's observations, and operator 3's observations.
+
 ```{r}
-library(tidyverse)
-library(tibble)
-library(knitr)
 setwd("~/Desktop/VT/StatProgPackages")
-ThicknessGauge <- read.csv('ThicknessGauge.dat', sep = " ", header = FALSE)
+ThicknessGauge <- read.csv('ThicknessGauge.dat', 
+                           sep = " ", 
+                           header = FALSE)
+```
+
+I will start by removing the first two rows (since they should be column descriptors) and renaming the columns to represent which operator took that observation. Then I am able to treat the two observations from each operator as a separate data set and combine them to make just four columns instead of the original seven.
+
+``` {r}
 tidy_thickness <- slice(ThicknessGauge, -c(1,2))
+colnames(tidy_thickness) <- c("Part", 
+                              "Operator1", "Operator1" ,
+                              "Operator2", "Operator2", 
+                              "Operator3", "Operator3")
 tidy_thickness <- bind_rows(tidy_thickness[,c(1,2,4,6)],
                             tidy_thickness[,c(1,3,5,7)])
-tidy_thickness[is.na(tidy_thickness)] <- 0
-tidy_thickness <- transmute(tidy_thickness, 
-                            Part = V1, 
-                            Operator1 = V2 + V3, 
-                            Operator2 = V4 + V5, 
-                            Operator3 = V6 + V7)
-kable(head(tidy_thickness), caption = "Thickness Gauge Data")
-boxplot(tidy_thickness[,2:4], ylab = "Measurements", main = "Distributions of Each Operator's Measurements")
+summary(tidy_thickness)
+kable(head(tidy_thickness), 
+      caption = "Thickness Gauge Data")
+boxplot(tidy_thickness[,2:4], 
+        ylab = "Measurements", 
+        main = "Distributions of Each Operator's Measurements")
 ```
 
 ### Part B
 
+There are a few issues I notice with this data set. First, the column names have spaces in them, meaning that their names do not match up correctly with their observations. Additionally, the data is stored across six columns when we are only observing two different variables, so it should just be across two columns. The final issue is that the last two columns are missing an observation in the last row. My goal for this data set is a table with two columns, one for the brain weight and one for the body weight.
+
 ```{r}
-BrainAndBodyWeight <- read.csv('BrainandBodyWeight.dat', sep = " ")
-tidy_weight <- bind_rows(BrainAndBodyWeight[,1:2], BrainAndBodyWeight[,3:4], BrainAndBodyWeight[,5:6])
-tidy_weight[is.na(tidy_weight)] <- 0
-tidy_weight <- transmute(tidy_weight, BodyWeight = Body + Brain + Body.1, BrainWeight = Wt + Wt.1 + Wt.2)
+BrainAndBodyWeight <- read.csv('BrainandBodyWeight.dat', 
+                               sep = " ")
+```
+
+To begin, I subset the table so that we only have the six columns that actually contain the data. I then rename the columns to represent what is being observed, the brain weight or the body weight. That way I can treat the columns as three separate data sets and combine them to make one long data set with two columns. Then, I remove the last row (the missing observation) so that the table is only filled with the actual data.
+
+``` {r}
+tidy_weight <- BrainAndBodyWeight[,1:6]
+colnames(tidy_weight) <- c("BodyWeight", "BrainWeight", 
+                           "BodyWeight", "BrainWeight", 
+                           "BodyWeight", "BrainWeight")
+tidy_weight <- bind_rows(tidy_weight[,1:2], 
+                         tidy_weight[,3:4], 
+                         tidy_weight[,5:6])
 tidy_weight <- slice(tidy_weight, -63)
-kable(head(tidy_weight), caption = "Brain and Body Weight Data")
-plot(tidy_weight$BodyWeight, tidy_weight$BrainWeight, xlab = "Body Weight", ylab = "Brain Weight", main = "Brain and Body Weight Trends")
+summary(tidy_weight)
+kable(head(tidy_weight), 
+      caption = "Brain and Body Weight Data")
+plot(tidy_weight$BodyWeight, tidy_weight$BrainWeight, 
+     xlab = "Body Weight", 
+     ylab = "Brain Weight", 
+     main = "Brain and Body Weight Trends")
 ```
 
 ### Part C
 
+The issues in this data set are very similar to the ones present in the brain and body weight data set from part b. The only extra issue in this one is the way that the year variable is stored: we want it to show the actual year instead of the code.
+
 ```{r}
-library(data.table)
-LongJump <- fread('LongJumpData.dat', header = FALSE, fill = TRUE)
+LongJump <- fread('LongJumpData.dat', 
+                  header = FALSE, 
+                  fill = TRUE)
+```
+
+Much of the cleaning I have done here is similar to previous parts. I remove the first row (since that would have been the column names) and then subset to only include columns that actually contain data. I rename the columns and then combine the four "smaller data sets" to make two columns for the year and the long jump record. I then remove the last two rows since there is no data.
+
+``` {r}
 tidy_jump <- slice(LongJump, -1)
-tidy_jump <- bind_rows(tidy_jump[,1:2], tidy_jump[,3:4], tidy_jump[,5:6], tidy_jump[,7:8])
-tidy_jump[is.na(tidy_jump)] <- 0
+tidy_jump <- tidy_jump[,1:8]
+colnames(tidy_jump) <- c("Year", "LongJump", 
+                         "Year", "LongJump", 
+                         "Year", "LongJump", 
+                         "Year", "LongJump")
+tidy_jump <- bind_rows(tidy_jump[,1:2], 
+                       tidy_jump[,3:4], 
+                       tidy_jump[,5:6], 
+                       tidy_jump[,7:8])
 tidy_jump <- slice(tidy_jump, -c(23,24))
+```
+
+For this part, I noticed that although we are seeing numbers, R is storing them as character vectors. To take summaries or compute mathematical operations, they must be stored as integers. So I changed all observations to a numerical format, and then added 1900 to the year variable to offset the coded years in the original data set.
+
+``` {r}
 tidy_jump <- as.data.frame(apply(tidy_jump, c(1,2), as.numeric))
-tidy_jump <- transmute(tidy_jump, Year = V1 + V3 + V5 + V7, LongJump = V2 + V4 + V6 + V8)
 tidy_jump$Year <- tidy_jump$Year + 1900
-kable(head(tidy_jump), caption = "Olympic Long Jump Data")
-plot(tidy_jump$Year, tidy_jump$LongJump, xlab = "Year", ylab = "Long Jump", main = "Olympic Men's Long Jump Records")
+summary(tidy_jump)
+kable(head(tidy_jump), 
+      caption = "Olympic Long Jump Data")
+plot(tidy_jump$Year, tidy_jump$LongJump, 
+     xlab = "Year", 
+     ylab = "Long Jump", 
+     main = "Olympic Men's Long Jump Records")
 ```
 
 ### Part D
 
+This data set has by far the most issues. The data set has been separated by a combination of spaces and commas, making it difficult to import cleanly into R. Additionally, it is storing variables in a mixture between columns and rows. Ideally, we would have a data set with three columns: one with the tomato variety, one with the yield amount, and one with the density.
+
 ```{r}
-tomato <- fread('tomato.dat', header = FALSE)
+tomato <- fread('tomato.dat', 
+                header = FALSE)
+```
+
+Each density has been imported in as a separate variable, with each triplicate observation in the same block separated by commas. These observations must be separated into their own columns before we can continue cleaning the data.
+
+``` {r}
+tidy_tomato <- separate(tomato, 
+                        "V2", 
+                        into = c("x1", "x2", "x3"), 
+                        sep = ",")
+tidy_tomato <- separate(tidy_tomato, 
+                        "V3", 
+                        into = c("y1", "y2", "y3"), 
+                        sep = ",")
+tidy_tomato <- separate(tidy_tomato, 
+                        "V4", 
+                        into = c("z1", "z2", "z3"), 
+                        sep = ",")
+```
+
+Similar to previous data sets, I am renaming the columns based on some feature of the data. This time I am using the densities as the column names and then binding each "smaller data set" together.
+
+``` {r}
+colnames(tidy_tomato) <- c("Variety", 
+                           "1000", "1000", "1000", 
+                           "2000", "2000", "2000", 
+                           "3000", "3000", "3000")
+tidy_tomato <- bind_rows(tidy_tomato[,c(1,2,5,8)], 
+                         tidy_tomato[,c(1,3,6,9)], 
+                         tidy_tomato[,c(1,4,7,10)])
+```
+
+The densities are still being stored in different columns, when we should have a single column with the density observed. I update the data set so that the density is stored correctly. Similar to earlier data sets, the yield observations are stored as characters and must be numeric, so I change them to a numeric format so that summaries can be taken.
+
+``` {r}
+tidy_tomato <- gather(tidy_tomato, 
+                      key = "Density", 
+                      value = "Yield", 
+                      `1000`, `2000`, `3000`)
+tidy_tomato$Yield <- as.numeric(tidy_tomato$Yield)
+summary(tidy_tomato)
+kable(head(tidy_tomato), caption = "Tomato Yields")
+boxplot(Yield ~ Variety, 
+        tidy_tomato, 
+        main = "Yield of Each Variety")
 ```
 
 ### Part E
 
+This data set again has issues with storing information in separate columns that should be in a single column with observations. Both the age and treatment should be variables with their observed values in that column, rather than being stored in several different columns. My goal for this data set is to have four columns for the block, age, treatment, and count.
+
 ```{r}
 LarvaeControl <- fread('LarvaeControl.dat')
-tidy_larvae <- bind_cols(c(LarvaeControl$Block,LarvaeControl$Block), bind_rows(LarvaeControl[,2:6], LarvaeControl[,7:11]))
-tidy_larvae[is.na(tidy_larvae)] <- 0
-tidy_larvae <- transmute(tidy_larvae, Block = ...1, `1` = `1`+`	1`, `2` = `2`, `3` = `3`, `4` = `4`, `5` = `5`)
-tidy_larvae <- mutate(tidy_larvae, Age = c(rep(1,8), rep(2,8)))
-tidy_larvae <- gather(tidy_larvae, key = "Treatment", value = "Counts", `1`, `2`, `3`, `4`, `5`)
+```
+
+I follow a similar process from many of the previous data sets with renaming the columns and then binding the "smaller data sets" together. But before I continue, I must make sure to account for the age variable, since it was not included when uploading the data. Since the data is ordered, this can be done by adding a vector of 1's and 2's to the data set. Then, I gather the separate treatment variables into one column, where the observation is the treatment given. This gives the final data set.
+
+``` {r}
+colnames(LarvaeControl) <- c("Block", 
+                             "1", "2", "3", "4", "5", 
+                             "1", "2", "3", "4", "5")
+tidy_larvae <- bind_rows(LarvaeControl[,c(1,2:6)], LarvaeControl[,c(1,7:11)])
+tidy_larvae <- mutate(tidy_larvae, 
+                      Age = c(rep(1,8), rep(2,8)))
+tidy_larvae <- gather(tidy_larvae, 
+                      key = "Treatment", 
+                      value = "Counts", 
+                      `1`, `2`, `3`, `4`, `5`)
+summary(tidy_larvae)
 kable(head(tidy_larvae), caption = "Larvae Counts")
-boxplot(Counts ~ Age, tidy_larvae, main = "Counts of Larvae at Two Ages")
+boxplot(Counts ~ Age, 
+        tidy_larvae, 
+        main = "Counts of Larvae at Two Ages")
 ```
