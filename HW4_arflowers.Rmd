@@ -14,13 +14,20 @@ output: pdf_document
 ```{r}
 library(tidyverse)
 library(tibble)
+library(knitr)
 setwd("~/Desktop/VT/StatProgPackages")
 ThicknessGauge <- read.csv('ThicknessGauge.dat', sep = " ", header = FALSE)
 tidy_thickness <- slice(ThicknessGauge, -c(1,2))
-tidy_thickness <- bind_rows(tidy_thickness[,c(1,2,4,6)], tidy_thickness[,c(1,3,5,7)])
+tidy_thickness <- bind_rows(tidy_thickness[,c(1,2,4,6)],
+                            tidy_thickness[,c(1,3,5,7)])
 tidy_thickness[is.na(tidy_thickness)] <- 0
-tidy_thickness <- transmute(tidy_thickness, Part = V1, Operator1 = V2 + V3, Operator2 = V4 + V5, Operator3 = V6 + V7)
-tidy_thickness
+tidy_thickness <- transmute(tidy_thickness, 
+                            Part = V1, 
+                            Operator1 = V2 + V3, 
+                            Operator2 = V4 + V5, 
+                            Operator3 = V6 + V7)
+kable(head(tidy_thickness), caption = "Thickness Gauge Data")
+boxplot(tidy_thickness[,2:4], ylab = "Measurements", main = "Distributions of Each Operator's Measurements")
 ```
 
 ### Part B
@@ -31,7 +38,8 @@ tidy_weight <- bind_rows(BrainAndBodyWeight[,1:2], BrainAndBodyWeight[,3:4], Bra
 tidy_weight[is.na(tidy_weight)] <- 0
 tidy_weight <- transmute(tidy_weight, BodyWeight = Body + Brain + Body.1, BrainWeight = Wt + Wt.1 + Wt.2)
 tidy_weight <- slice(tidy_weight, -63)
-tidy_weight
+kable(head(tidy_weight), caption = "Brain and Body Weight Data")
+plot(tidy_weight$BodyWeight, tidy_weight$BrainWeight, xlab = "Body Weight", ylab = "Brain Weight", main = "Brain and Body Weight Trends")
 ```
 
 ### Part C
@@ -46,7 +54,8 @@ tidy_jump <- slice(tidy_jump, -c(23,24))
 tidy_jump <- as.data.frame(apply(tidy_jump, c(1,2), as.numeric))
 tidy_jump <- transmute(tidy_jump, Year = V1 + V3 + V5 + V7, LongJump = V2 + V4 + V6 + V8)
 tidy_jump$Year <- tidy_jump$Year + 1900
-tidy_jump
+kable(head(tidy_jump), caption = "Olympic Long Jump Data")
+plot(tidy_jump$Year, tidy_jump$LongJump, xlab = "Year", ylab = "Long Jump", main = "Olympic Men's Long Jump Records")
 ```
 
 ### Part D
@@ -58,5 +67,12 @@ tomato <- fread('tomato.dat', header = FALSE)
 ### Part E
 
 ```{r}
-LarvaeControl <- read.csv('LarvaeControl.dat', sep = " ", header = FALSE)
+LarvaeControl <- fread('LarvaeControl.dat')
+tidy_larvae <- bind_cols(c(LarvaeControl$Block,LarvaeControl$Block), bind_rows(LarvaeControl[,2:6], LarvaeControl[,7:11]))
+tidy_larvae[is.na(tidy_larvae)] <- 0
+tidy_larvae <- transmute(tidy_larvae, Block = ...1, `1` = `1`+`	1`, `2` = `2`, `3` = `3`, `4` = `4`, `5` = `5`)
+tidy_larvae <- mutate(tidy_larvae, Age = c(rep(1,8), rep(2,8)))
+tidy_larvae <- gather(tidy_larvae, key = "Treatment", value = "Counts", `1`, `2`, `3`, `4`, `5`)
+kable(head(tidy_larvae), caption = "Larvae Counts")
+boxplot(Counts ~ Age, tidy_larvae, main = "Counts of Larvae at Two Ages")
 ```
