@@ -1,0 +1,70 @@
+---
+title: "HW5_arflowers"
+author: "Anna Flowers"
+date: "11/8/2021"
+output: pdf_document
+---
+
+# Homework 5
+
+## Problem 2
+
+```{r}
+setwd("~/Desktop/VT/StatProgPackages")
+sensory <- read.csv('Sensory.dat', sep = "", header = FALSE)
+sensory[-c(2,3,6,9,12,15,18,21,24,27,30), 2:6] <- sensory[-c(2,3,6,9,12,15,18,21,24,27,30), 1:5]
+```
+
+### Part A
+
+The original code supplied does not work because when you use the cbind command on a data frame, it does not automatically make the column names the same as the original vector names. This means that when using the lm command in the loop and calling the logapple08 and logrm08 variables, they are both the original values instead of the resampled ones. So every iteration will give an estimate the same as the original one, since the command is always on the original data.
+
+### Part B
+
+```{r}
+
+```
+
+## Problem 3
+
+### Part A
+
+From the graph it appears there are 4 roots.
+
+```{r}
+f <- function(x) {
+  y <- x - (3^(x) - sin(x) + cos(5*x) + x^2 - 1.5) / (log(3)*3^(x) - cos(x) - 5*sin(5*x) + 2*x)
+  n <- 0
+  while(abs(x - y) > .00001 && n < 100) {
+    x <- y
+    y <- x - (3^x - sin(x) + cos(5*x) + x^2 - 1.5) / (log(3)*3^x - cos(x) - 5*sin(5*x) + 2*x)
+    n <- n + 1
+  }
+  if(n < 100) {return(y)}
+  return(NA)
+}
+```
+
+If the function does not converge in 100 iterations, it returns a value of NA.
+
+### Part B
+
+```{r}
+vec <- cbind(seq(-2, 1.96, by = 0.04))
+length(vec)
+time <- system.time({solutions <- apply(vec, 1, f)})
+time
+plot(vec, solutions, xlab = "Starting Point", ylab = "Root Found", main = "Starting Point vs. Root Found")
+```
+
+### Part C
+
+## Problem 4
+
+### Part A
+
+### Part B
+
+### Part C
+
+### Part D
