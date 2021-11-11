@@ -10,9 +10,9 @@ output: pdf_document
 ## Problem 2
 
 ```{r}
+library(tidyr)
 setwd("~/Desktop/VT/StatProgPackages")
 sensory <- read.csv('Sensory.dat', sep = "", header = FALSE)
-sensory[-c(2,3,6,9,12,15,18,21,24,27,30), 2:6] <- sensory[-c(2,3,6,9,12,15,18,21,24,27,30), 1:5]
 ```
 
 ### Part A
@@ -22,7 +22,32 @@ The original code supplied does not work because when you use the cbind command 
 ### Part B
 
 ```{r}
+sensory[-c(2,3,6,9,12,15,18,21,24,27,30), 2:6] <- sensory[-c(2,3,6,9,12,15,18,21,24,27,30), 1:5]
+sensory <- sensory[,2:6]
+sensory <- sensory[-c(1,2),]
+colnames(sensory) <- c('1','2','3','4','5')
+sensory <- gather(sensory, key = "Operator", value = "y", 1:5)
+sensory$y <- as.numeric(sensory$y)
 
+set.seed(1834)
+n <- 100
+beta.boot <- matrix(0, n, 5)
+system.time({
+for(i in 1:n) {
+  samp1 <- sample(seq(1, 30, by = 1), 30, replace = TRUE)
+  samp2 <- sample(seq(31, 60, by = 1), 30, replace = TRUE)
+  samp3 <- sample(seq(61, 90, by = 1), 30, replace = TRUE)
+  samp4 <- sample(seq(91, 120, by = 1), 30, replace = TRUE)
+  samp5 <- sample(seq(121, 150, by = 1), 30, replace = TRUE)
+  sens.boot <- sensory[c(samp1,samp2,samp3,samp4,samp5),]
+  fit <- lm(y ~ Operator, sens.boot)
+  beta.boot[i,] <- fit$coefficients
+}})
+mean(beta.boot[,1])
+mean(beta.boot[,2])
+mean(beta.boot[,3])
+mean(beta.boot[,4])
+mean(beta.boot[,5])
 ```
 
 ## Problem 3
@@ -56,8 +81,6 @@ time <- system.time({solutions <- apply(vec, 1, f)})
 time
 plot(vec, solutions, xlab = "Starting Point", ylab = "Root Found", main = "Starting Point vs. Root Found")
 ```
-
-### Part C
 
 ## Problem 4
 
